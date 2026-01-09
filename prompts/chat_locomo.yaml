@@ -1,0 +1,15 @@
+temperature: 1.0
+max_tokens: 512
+timeout: 10
+
+messages:
+- role: user
+  content: |
+    Based on the context, write an answer in the form of a short phrase for the following question. Answer with exact words from the context whenever possible.
+
+    Context:
+    {{$context}}
+
+    Question: {{$question}}
+
+    Short Answer:
