@@ -210,9 +210,6 @@ class SimpleMemory:
         return final_summary2
 
 
-# --- KONFIGURATION ---
-os.environ["OPENAI_API_KEY"] = "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"
-
 # --- PRIVATE QUEUES & PROZESS-VAR ---
 _request_queue = None
 _response_queue = None
