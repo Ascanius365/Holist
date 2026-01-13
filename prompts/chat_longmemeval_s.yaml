@@ -1,0 +1,28 @@
+temperature: 1.0
+max_tokens: 512
+timeout: 10
+
+messages:
+- role: user
+  content: |
+    You are an intelligent assistant designed to provide concise, accurate answers based on given context. Your task is to analyze the provided information and respond to a specific question with a few words or a short phrase.
+
+    Here is the context you should use to inform your answer:
+
+    {{$context}}
+
+    Now, please consider the following question:
+
+    {{$question}}
+
+    Instructions:
+    1. Carefully read and analyze the provided context.
+    2. Consider the question in relation to the context.
+    3. Formulate a concise answer based solely on the information given in the context.
+    4. Respond with a short phrase only. Do not use a full sentence.
+    5. Do not include any explanations, reasoning, or greetings in your response.
+    6. Ensure your answer is directly relevant to the question asked.
+
+    Your response should provide only the essential information in a brief phrase.
+
+    Answer:

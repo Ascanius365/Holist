@@ -1,0 +1,85 @@
+temperature: 0.0
+max_tokens: 1024
+timeout: 45
+
+messages:
+- role: user
+  content: |
+    You are an AI assistant analyzing memory fragments to generate insights, which could be important for a Minecraft scout. Your task is to identify patterns and connections from the data provided.
+    
+    Analyze these fragments and generate insights based on five inference types:
+    - Extension/Generalization: The process of expanding information from specific cases or situations to broader categories, domains, or patterns. This type of inference derives more general characteristics or tendencies from concrete information. Identify the Bot's emerging "Identity" or "Profession" (e.g., from mining stone to being a 'Structural Engineer').
+    - Accumulation: The process of identifying behaviors, experiences, or patterns that repeat or persist over time. This type of inference focuses on frequency, consistency, and persistence to infer habitual patterns or significant trends.
+    - Specification/Refinement: The process of breaking down general information into more detailed and specific aspects. This type of inference decomposes broad concepts or experiences into concrete elements or details. Detail the exact requirements for current long-term goals (e.g., breaking down 'Build Shelter' into specific missing resources).
+    - Transformation: The process of identifying changes in states, perspectives, emotions, behaviors, etc. over time. This type of inference discerns transitions or developments between previous and current/new states. Discern shifts in safety or efficiency (e.g., from 'vulnerable wanderer' to 'base-protected scout').
+    - Connection/Implication: The process of identifying relationships, causality, or meaning between seemingly disparate pieces of information. This type of inference discerns connections or conclusions not explicitly mentioned.
+    - Spatial generalization: Positions are at certain distances from each other or belong to a common location. What kind of building or object could be at that location, depending on what is being done there, for example, something was crafted here and a chest was looked inside here, so this could be the home. Write the coordinates of a location for example x: 25.5, y: 72, z: 0.5, of the base, forest, village.
+
+    Your output should be formatted as a JSON object with an "extended_insight" key containing an array of inference objects. Each inference object should have the following structure:
+    {
+      "inference_type": "one of the five inference types",
+      "key": "brief description of the insight",
+      "date": "relevant date or date range and time",
+      "value": "detailed description of the insight (12 words or less)"
+    }
+
+    Important instructions:
+    - You do NOT need to use all five inference types. Select only the inference types that clearly apply to the data.
+    - Include multiple different inference types when appropriate, but don't force all five types.
+    - You may use the same inference type multiple times for different insights if appropriate.
+    - Focus on quality over quantity - provide meaningful insights based on the data.
+    - Avoid trivial or insignificant insights - focus only on substantive patterns and connections.
+    
+    <example>
+    Example:
+    Below are the memory fragments to analyze:
+    [tech purchase, 2026-01-07 Wednesday 10:35:00]: Jordan buy new drawing tablet
+    [software usage, 2026-01-07 Wednesday 12:10:00]: Jordan spend three hours learning Procreate app
+    [online activity, 2026-01-07 Wednesday 15:40:00]: Jordan create account on digital art community DeviantArt
+    [social media, 2026-01-07 Wednesday 18:05:00]: Jordan share first digital artwork on Instagram
+    
+    Output:
+    {
+      "extended_insight": [
+        {
+          "inference_type": "extension/generalization",
+          "key": "skill development approach",
+          "date": "2023-03-05 15:27:23 to 2023-03-22 15:35:00",
+          "value": "Jordan follows a methodical learning approach with appropriate tools"
+        },
+        {
+          "inference_type": "accumulation",
+          "key": "digital art activities",
+          "date": "2023-03-05 10:05:00 to 2023-03-22 11:15:00",
+          "value": "Jordan engaged in 4 digital art activities within 17 days"
+        },
+        {
+          "inference_type": "specification/refinement",
+          "key": "artistic medium",
+          "date": "2023-03-22 13:05:03",
+          "value": "Jordan uses tablet-based digital illustration with Procreate"
+        },
+        {
+          "inference_type": "transformation",
+          "key": "identity shift",
+          "date": "Before 2023-03-05 17:33:01 to 2023-03-22 18:20:01",
+          "value": "Jordan evolved from art appreciator to digital artist"
+        },
+        {
+          "inference_type": "connection/implication",
+          "key": "artistic background",
+          "date": "Before 2023-03-05 14:22:00",
+          "value": "Jordan likely has previous art experience"
+        }
+        {
+          "inference_type": "Spatial generalization",
+          "key": "base location",
+          "date": "2023-03-05 14:22:00",
+          "value": "The base is likely located at x: 25.5, y: 72, z: 0.5, because the Scout looked in the chest here"
+        }
+      ]
+    }
+    </example>
+    
+    Below are the memory fragments to analyze:
+    {{$memory_fragments}}

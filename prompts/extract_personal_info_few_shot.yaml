@@ -1,0 +1,106 @@
+temperature: 0.0
+max_tokens: 2048
+timeout: 20
+response_format:
+  type: json_object
+messages:
+- role: user
+  content: |
+    # GOAL
+    Analyze the entire provided <Conversation> to identify all statements revealing personal information about the user. Categorize each piece of information as Factual, Experiential, or Subjective, and output the results as a single structured JSON object according to the <Final Output JSON Format>.
+
+    # INFORMATION CATEGORY DEFINITIONS
+    1.  **Factual Information:** Objective, verifiable facts about the user's state, attributes, possessions, knowledge, skills, and **relationships with others (family, friends, pets, etc.)**. ('What I am / What I have / Who I know')
+        * *Keywords:* is, am, have, own, live in, work as, know (skill/fact/person), my name/age/job/sister/friend is, etc.
+        * *Examples:* "My name is Alex.", "I live in New York.", "I have a Bachelor's degree in CS.", "I own two bikes.", "Emily is my sister.", "Luna is my cat.", "I know Python."
+
+    2.  **Experiential Information:** Specific events, actions, activities, or interactions experienced by the user over time, often situated in a context. ('What I did / What happened to me')
+        * *Keywords:* went, did, saw, met, visited, learned (an experience), attended, bought (as an event), have been, have visited, have tried, have experienced, last year, yesterday, when I was..., etc.
+        * *Examples:* "I travelled to LA last weekend.", "I've assembled the IKEA bookshelf.", "I've been to Japan twice.", "I have met with the CEO.", "I attended the Imagine Dragons concert."
+
+    3.  **Subjective Information:** The user's internal states, including preferences, habits, opinions, beliefs, goals, plans, feelings, etc. ('What I like / think / want / feel / usually do')
+        * *Keywords:* like, love, hate, prefer, think, believe, feel, want, plan to, hope to, usually, often, my goal is, etc.
+        * *Examples:* "I love spicy food.", "I usually wake up at 7 AM.", "I thought that movie was great.", "My goal is to learn Spanish.", "I want to visit Europe next year."
+
+    # INSTRUCTIONS
+    1. Carefully read and analyze the entire <Conversation>. <Conversation> consists of messages, each containing a [message_id] followed by its content.
+    2. Identify all specific pieces of information about the user that fall into the Factual, Experiential, or Subjective categories based on the definitions above.
+    3. Format each value as a phrase that starts with a verb in present tense, regardless of the original tense in the conversation.
+    4. For the "date" field:
+        * For ongoing facts or current states, use the date of the message
+        * For past events with a specific timeframe mentioned (e.g., "yesterday", "three days ago"), calculate and use the actual date based on the message date
+        * For past events mentioned in the conversation, mark as "Before [message-date]"
+        * For future plans or intentions, mark as "After [message-date]"
+    5. Format the output as a single JSON object with three categories: "Factual_Information", "Experiential_Information", and "Subjective_Information". Use empty lists (`[]`) for categories with no information.
+    6. Use the exact same [message_id] as in the original message. Do not include pronouns in the value.
+
+    # Example
+    <Conversation>
+    [msg-301] (2024-05-17 Friday) I’m living in Rome now with my girlfriend, Hana. We moved here last summer because she started grad school at Stanford.
+    [msg-302] (2024-05-17 Friday) I quit my job at Coupang in March. I just didn’t see myself growing there anymore.
+    [msg-303] (2024-05-17 Friday) I’m thinking about switching into UX design. I’ve always liked the idea of making tech more human-friendly.
+    [msg-304] (2024-05-17 Friday) My brother Junho lives in Seattle. He’s an engineer and always sends me photos of the mountains.
+    [msg-305] (2024-05-17 Friday) I ate chicken with my friends yesterday.
+
+    Answer:
+    {
+      "Factual_Information": [
+        {
+          "key": "current residence",
+          "value": "Lives in Rome with girlfriend Hana",
+          "message_id": "msg-301",
+          "date": "2024-05-17"
+        },
+        {
+          "key": "reason for relocation",
+          "value": "Moves to Rome because Hana started grad school at Stanford",
+          "message_id": "msg-301",
+          "date": "Before 2024-05-17"
+        },
+        {
+          "key": "sibling information",
+          "value": "Brother Junho lives in Seattle and works as an engineer",
+          "message_id": "msg-304",
+          "date": "2024-05-17"
+        }
+      ],
+      "Experiential_Information": [
+        {
+          "key": "job resignation",
+          "value": "Quit job at Coupang in March",
+          "message_id": "msg-302",
+          "date": "Before 2024-05-17"
+        },
+        {
+          "key": "chicken consumption",
+          "value": "Eats chicken with friends",
+          "message_id": "msg-305",
+          "date": "2024-05-16"
+        }
+      ],
+      "Subjective_Information": [
+        {
+          "key": "career dissatisfaction",
+          "value": "Be Felt no growth potential at Coupang",
+          "message_id": "msg-302",
+          "date": "Before 2024-05-17"
+        },
+        {
+          "key": "career interest",
+          "value": "Be interested in switching to UX design",
+          "message_id": "msg-303",
+          "date": "2024-05-17"
+        },
+        {
+          "key": "design preference",
+          "value": "Likes the idea of making technology more human-friendly",
+          "message_id": "msg-303",
+          "date": "2024-05-17"
+        }
+      ]
+    }
+
+    <Conversation>
+    {{$conversation}}
+
+    Answer:
